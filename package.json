@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "webpack --mode development --watch",
-    "schema": "mysql -u student < server/db/schema.sql -p",
+    "schema": "mysql -u root < server/db/schema.sql -p",
     "test-server": "jest --config ./server/tests/jest.config.json --detectOpenHandles",
     "seed": "node server/db/seed.js",
     "test-react": "jest --config ./client/tests/jest.config.json",
@@ -19,9 +19,11 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "file-system": "^2.2.2",
     "lodash": "^4.17.11",
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
+    "pg": "^7.7.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "sequelize": "^4.42.0"
