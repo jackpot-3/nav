@@ -30,12 +30,14 @@ Get products
 - inputs: category, query 
 - output: array of top 10 products matching query and category
 
-```SELECT * FROM products WHERE name = '${name}'
+```
+SELECT * FROM products WHERE name = '${name}'
 ```
 
 Add a product
 - route: POST /product
-```INSERT INTO products (id, name, categoryid, popularity) VALUES ($1, $2, $3, $4)
+```
+INSERT INTO products (id, name, categoryid, popularity) VALUES ($1, $2, $3, $4)
 data: {
   id: INTEGER PRIMARY KEY,
   name: VARCHAR(32),
@@ -46,12 +48,14 @@ data: {
 
 Update a product
 - route: PUT/product/:id
-```UPDATE products SET, name = '${params[0]}', categoryid = ${params[1]}, popularity = ${params[2]} WHERE id = ${id}
+```
+UPDATE products SET, name = '${params[0]}', categoryid = ${params[1]}, popularity = ${params[2]} WHERE id = ${id}
 ```
 
 Delete a product
 - route: DELETE/product/:id
-```DELETE FROM products WHERE id = ${id}
+```
+DELETE FROM products WHERE id = ${id}
 ```
 
 ## Requirements
