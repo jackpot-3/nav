@@ -3,10 +3,10 @@ const fs = require('file-system');
 
 const categoryNames = ['electronics', 'clothes', 'games', 'appliances', 'books'];
 const printer = () => {
-  const writeStream = fs.createWriteStream('./data.csv');
-  writeStream.write('productName,categoryId,popularity\n');
+  const writeStream = fs.createWriteStream('./data2.csv');
+  writeStream.write('id,productName,categoryId,popularity\n');
   let i = 0;
-  const max = 1e7;
+  const max = 5e7;
   const writer = () => {
     let result = true;
     while (i < max && result) {
@@ -14,10 +14,11 @@ const printer = () => {
         console.log('1M');
       }
       const data = [];
-      const productName = faker.commerce.productName() + ;
+      const productName = faker.commerce.productName() + i;
       const categoryId = faker.random.number(4);
       const popularity = faker.random.number(100);
-      data.push([productName, categoryId, popularity]);
+      data.push(i, productName, categoryId, popularity);
+  
       result = writeStream.write(data.join(',') + '\n');
       i++;
     }
@@ -28,21 +29,3 @@ const printer = () => {
   writer();
 };
 printer();
-client.connect((err) => {
-  if (err) {
-    console.error('connection error', err.stack);
-  } else {
-    console.log('connected');
-    client.query('CREATE TABLE products(id SERIAL PRIMARY KEY, name VARCHAR(43) NOT NULL, categoryId Integer, popularity Integer)', (err) => {
-      if (err) {
-        console.error(err);
-      }
-      client.query("COPY products(name, categoryId, popularity) FROM '/Users/jacky/documents/code/SDC/vrtobar-service/data.csv' DELIMITER ',' CSV HEADER", (err) => {
-        if (err) {
-          console.error(err);
-        }
-        client.end();
-      });
-    });
-  }
-});

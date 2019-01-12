@@ -1,38 +1,27 @@
-const faker = require('faker');
+const pg = require('pg');
 
-const { Category } = require('../models/category.model');
-const { Product } = require('../models/product.model');
-
-// Create 20 categories and 100 products
-const categoryPromises = [];
-const categoryNames = ['electronics', 'clothes', 'games', 'appliances', 'books'];
-
-for (let i = 0; i < 5; i++) {
-  categoryPromises.push(Category.create({ category: categoryNames[i] }));
-}
-
-Promise.all(categoryPromises)
-  .then((categories) => {
-    const productPromises = [];
-    let productName;
-    let productDescription;
-
-    for (let i = 0; i < categories.length; i++) {
-      for (let j = 1; j <= 20; j++) {
-        productName = faker.commerce.productName();
-        productDescription = faker.lorem.paragraph();
-        productPromises.push(Product.create({
-          name: productName.toLowerCase(),
-          description: productDescription,
-          categoryId: categories[i].id,
-        }));
+const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/amazon';
+const client = new pg.Client(connectionString);
+client.connect((err) => {
+  if (err) {
+    console.error('connection error', err.stack);
+  } else {
+    console.log('connected');
+    client.query('CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY, name VARCHAR(43) NOT NULL, categoryId Integer, popularity Integer)', (err) => {
+      if (err) {
+        console.error(err);
       }
-    }
-
-    Promise.all(productPromises)
-      .then((products) => {
-        console.log(`Created ${products.length} products.`);
-      })
-      .catch(err => console.log('Error: Products', err));
-  })
-  .catch(err => console.log('Error: Categories', err));
+      client.query("COPY products(id, name, categoryId, popularity) FROM '/Users/jacky/documents/HR/SDC/vrtobar-service/data2.csv' DELIMITER ',' CSV HEADER", (err) => {
+        if (err) {
+          console.error(err);
+        }
+        client.query('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, category VARCHAR(32))', (err) => {
+          if (err) {
+            throw err;
+          }
+          client.end();
+        });
+      });
+    });
+  }
+});
