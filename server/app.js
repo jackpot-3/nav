@@ -1,4 +1,4 @@
-const { db, read } = require('./db/db');
+const controllers = require('./controller/postgres/psql.controller');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
@@ -9,25 +9,16 @@ const app = express();
 
 
 // STATIC FILES
-app.get(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // MIDDLEWARE
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(bodyParser.urlencoded());
 app.use(cors());
 
 // ROUTES
 // app.use('/categories', categoriesRouter);
-app.get('/products/:category/:query', (req, res) => {
-  const { query } = req.params;
-  read(query, (err, products) => {
-    if (err) {
-      throw err;
-    }
-    // console.log(products);
-    res.status(200).send({ products });
-  });
-});
+app.get('/products/:category/:query', controllers.read);
 
 // 404
 app.use((req, res) => {

@@ -41,18 +41,19 @@ pool.connect((err, client, release) => {
 //   console.log('connected to psql');
 // });
 
-const read = (query, cb) => {
-  // const categoryParam = req.params.category.toLowerCase();
-  // const strings = query.split(' ')
-  const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99 LIMIT 10`;
-  pool.query(queryString, (err, results) => {
-    if (err) {
-      return console.error(err);
-    }
-    cb(null, results.rows);
-  });
-};
+// const read = (query, cb) => {
+//   // const categoryParam = req.params.category.toLowerCase();
+//   // const strings = query.split(' ')
+//   const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99  ORDER BY RANDOM() LIMIT 10`;
+//   pool.query(queryString, (err, results) => {
+//     if (err) {
+//       return console.error(err);
+//     }
+//     // pool.end();
+//     cb(null, results.rows);
+//   });
+// };
 
 module.exports = {
-  read,
+  pool,
 };

@@ -1,20 +1,11 @@
-const pg = require('pg');
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/amazon';
+const { pool } = require('../../db/db');
 
-const client = new pg.Client(connectionString);
 
-client.connect((err) => {
-  if (err) {
-    console.error('connection error', err.stack);
-  }
-  console.log('connected');
-});
-
-const create = (data) => {
+module.exports.create = (data) => {
   const queryString = 'INSERT INTO products (id, name, categoryid, popularity) VALUES ($1, $2, $3, $4)';
   const params = Object.values(data);
   console.log(params);
-  client.query(queryString, params, (err, results) => {
+  pool.query(queryString, params, (err, results) => {
     if (err) {
       return console.error(err);
     }
@@ -22,21 +13,28 @@ const create = (data) => {
   });
 };
 
-const read = (name) => {
-  const queryString = `SELECT * FROM products WHERE name = '${name}'`;
-  client.query(queryString, (err, results) => {
+module.exports.read = (req, res) => {
+  const { query } = req.params;
+  // console.log(products);
+  // const categoryParam = req.params.category.toLowerCase();
+  // const strings = query.split(' ')
+  const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99  ORDER BY RANDOM() LIMIT 10`;
+  pool.query(queryString, (err, results) => {
     if (err) {
       return console.error(err);
     }
-    console.log(results);
+    // pool.end();
+    // cb(null, results.rows);
+    console.log(results.rows);
+    res.status(200).send(results.rows);
   });
 };
 
-const update = (id, data) => {
+module.exports.update = (id, data) => {
   const params = Object.values(data);
   const queryString = `UPDATE products SET, name = '${params[0]}', categoryid = ${params[1]}, \
   popularity = ${params[2]} WHERE id = ${id}`;
-  client.query(queryString, (err, results) => {
+  pool.query(queryString, (err, results) => {
     if (err) {
       return console.error(err);
     }
@@ -44,9 +42,9 @@ const update = (id, data) => {
   });
 };
 
-const deleteOne = (id) => {
+module.exports.deleteOne = (id) => {
   const queryString = `DELETE FROM products WHERE id = ${id}`;
-  client.query(queryString, (err, results) => {
+  pool.query(queryString, (err, results) => {
     if (err) {
       return console.error(err);
     }

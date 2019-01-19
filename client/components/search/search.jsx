@@ -56,8 +56,8 @@ class Search extends React.Component {
       fetch(`http://localhost:3003/products/${this.state.selectValue}/${query}`)
         .then(resData => resData.json())
         .then((data) => {
-          console.log(data);
-          this.setState({ searchResults: data.products });
+          console.log(Array.isArray(data));
+          this.setState({ searchResults: data });
         })
         .catch((err) => {
           console.log(err);

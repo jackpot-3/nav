@@ -2,6 +2,7 @@ import React from 'react';
 
 const Results = (props) => {
   let itemsJSX;
+  console.log(props);
   if (props.products.length > 0) {
     itemsJSX = props.products.slice(0, 10).map((product) => {
       return (
