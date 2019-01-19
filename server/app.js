@@ -7,8 +7,6 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// const categoriesRouter = require('./routes/category.routes');
-const productsRouter = require('./routes/product.routes');
 
 // STATIC FILES
 app.get(express.static(path.join(__dirname, '..', 'public')));
