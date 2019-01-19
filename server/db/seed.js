@@ -30,14 +30,16 @@ const writer = async (batch) => {
 
 const addIndex = async () => {  
   for (let j = 97; j < 123; j++) {
-    const queryString = `create index IF NOT EXISTS ${String.fromCharCode(j)}_keyword_index on ${String.fromCharCode(j)} (keyword)`;
-    await client.query(queryString);
-    const queryString2 = `create index IF NOT EXISTS ${String.fromCharCode(j)}_category_index on ${String.fromCharCode(j)} (category)`;
-    await client.query(queryString2);
+    const keywordIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_keyword_index on ${String.fromCharCode(j)} (keyword)`;
+    await client.query(keywordIndex);
+    const categoryIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_category_index on ${String.fromCharCode(j)} (category)`;
+    await client.query(categoryIndex);
+    const popularityIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_popularity_index on ${String.fromCharCode(j)} (popularity)`;
+    await client.query(popularityIndex);
     console.log(j);
   }
   console.log('done');
-};
+};``
 
 const createBatch = async (batch) => {
   for (let i = 0; i < batch; i++) {
@@ -60,4 +62,3 @@ const setup = async () => {
 
 setup();
 
-\
