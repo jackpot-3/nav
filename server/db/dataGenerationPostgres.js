@@ -1,12 +1,11 @@
 const faker = require('faker');
 const fs = require('file-system');
 
-const categoryNames = ['electronics', 'clothes', 'games', 'appliances', 'books'];
 const printer = () => {
   const writeStream = fs.createWriteStream('./data2.csv');
   writeStream.write('id,productName,categoryId,popularity\n');
   let i = 0;
-  const max = 5e7;
+  const max = 1e7;
   const writer = () => {
     let result = true;
     while (i < max && result) {
