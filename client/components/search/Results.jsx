@@ -2,18 +2,18 @@ import React from 'react';
 
 const Results = (props) => {
   let itemsJSX;
-  console.log(props);
   if (props.products.length > 0) {
     itemsJSX = props.products.slice(0, 10).map((product) => {
+      console.log(product.product_name);
       return (
         <li
-          key={product.id}
+          key={product.product_id}
           className="v_search-section__results--item"
           onClick={(e) => {
-            props.onProductClick(e, product.id);
+            props.onProductClick(e, product.product_id);
           }}
         >
-          {product.name}
+          {product.product_name}
         </li>
       );
     });

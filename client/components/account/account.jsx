@@ -18,19 +18,19 @@ class Account extends React.Component {
     this.toggleAccountHover = this.toggleAccountHover.bind(this);
   }
 
-  componentDidMount() {
-    // Fetch cart count
-    setInterval(() => {
-      fetch('http://localhost:3002/cart')
-        .then(resData => resData.json())
-        .then((data) => {
-          this.setState({ cartCount: data.length });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }, 1000);
-  }
+  // componentDidMount() {
+  //   // Fetch cart count
+  //   setInterval(() => {
+  //     fetch('http://localhost:3002/cart')
+  //       .then(resData => resData.json())
+  //       .then((data) => {
+  //         this.setState({ cartCount: data.length });
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }, 1000);
+  // }
 
   onTryHover() {
     this.props.toggleOverlay(true);
