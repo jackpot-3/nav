@@ -1,15 +1,21 @@
 const { pool } = require('../../db/db');
+const redis = require('../../../redis');
 
-
-module.exports.create = (data) => {
-  const queryString = 'INSERT INTO products (id, name, categoryid, popularity) VALUES ($1, $2, $3, $4)';
-  const params = Object.values(data);
-  console.log(params);
-  pool.query(queryString, params, (err, results) => {
+module.exports.create = (req, res) => {
+  const names = req.body.product_name.split(' ');
+  const data = req.body;
+  let queryString = '';
+  for (let n = 0; n < names.length - 1; n++) {
+    const keyword = names[n].toLowerCase();
+    const char = keyword[0];
+    queryString += `INSERT INTO ${char} (product_id, product_name, keyword, category, popularity) VALUES (${data.product_id}, '${data.product_name}', '${keyword}', '${data.ategory}', ${data.popularity}); \n`;
+  }
+  pool.query(queryString, (err, results) => {
     if (err) {
       return console.error(err);
     }
     console.log(results);
+    res.status(201).send();
   });
 };
 
@@ -18,15 +24,26 @@ module.exports.read = (req, res) => {
   // console.log(products);
   // const categoryParam = req.params.category.toLowerCase();
   // const strings = query.split(' ')
-  const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99  ORDER BY RANDOM() LIMIT 10`;
-  pool.query(queryString, (err, results) => {
-    if (err) {
-      return console.error(err);
+  redis.get(query, (error, result) =>  {
+    if (error) {
+      console.log(error);
+      throw error;
     }
-    // pool.end();
-    // cb(null, results.rows);
-    console.log(results.rows);
-    res.status(200).send(results.rows);
+    // console.log('GET result ->' + JSON.parse(result));
+    if (Array.isArray(JSON.parse(result))) {
+      res.status(200).send(JSON.parse(result));
+    } else {
+      const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99 ORDER BY RANDOM() LIMIT 10`;
+      pool.query(queryString, (err, results) => {
+        if (err) {
+          return console.error(err);
+        }
+        if (results.rows.length > 0) {
+          redis.set(query, JSON.stringify(results.rows), 'EX', 120);
+        }
+        res.status(200).send(results.rows);
+      });
+    }
   });
 };
 
