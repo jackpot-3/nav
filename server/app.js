@@ -13,12 +13,14 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // MIDDLEWARE
 // app.use(morgan('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cors());
 
 // ROUTES
 // app.use('/categories', categoriesRouter);
 app.get('/products/:category/:query', controllers.read);
+app.post('/products', controllers.create);
 
 // 404
 app.use((req, res) => {
