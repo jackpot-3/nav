@@ -1,5 +1,5 @@
 const { pool } = require('../../db/db');
-const redis = require('../../../redis');
+//const redis = require('../../../redis');
 
 module.exports.create = (req, res) => {
   const names = req.body.product_name.split(' ');
@@ -21,30 +21,22 @@ module.exports.create = (req, res) => {
 
 module.exports.read = (req, res) => {
   const { query } = req.params;
+  const strings = ['car', 'bacon', 'cotton', 'awesome', 'bike', 'intelligent', 'concrete', 'fresh', 'tasty', 
+  'metal', 'wooden', 'unbranded', 'practical', 'handmade', 'Tasty', 'Steel', 'Ergonomic', 'Gorgeous', 'computer', 
+  'gloves', 'Granite', 'Table', 'Salad', 'Towels', 'Shoes', 'small', 'refined'];
   // console.log(products);
   // const categoryParam = req.params.category.toLowerCase();
   // const strings = query.split(' ')
-  redis.get(query, (error, result) =>  {
-    if (error) {
-      console.log(error);
-      throw error;
-    }
-    // console.log('GET result ->' + JSON.parse(result));
-    if (Array.isArray(JSON.parse(result))) {
-      res.status(200).send(JSON.parse(result));
-    } else {
-      const queryString = `SELECT * FROM ${query.toLowerCase()[0]} WHERE keyword = '${query.toLowerCase()}' and popularity > 99 ORDER BY RANDOM() LIMIT 10`;
+  const queryString = `SELECT * FROM ${strings[query].toLowerCase()[0]} WHERE keyword = '${strings[query].toLowerCase()}' and popularity > 99 ORDER BY RANDOM() LIMIT 10`;
       pool.query(queryString, (err, results) => {
         if (err) {
           return console.error(err);
         }
-        if (results.rows.length > 0) {
-          redis.set(query, JSON.stringify(results.rows), 'EX', 120);
-        }
+        // if (results.rows.length > 0) {
+        //   redis.set(query, JSON.stringify(results.rows), 'EX', 120);
+        // }
         res.status(200).send(results.rows);
       });
-    }
-  });
 };
 
 module.exports.update = (id, data) => {

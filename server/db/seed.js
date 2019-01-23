@@ -2,7 +2,12 @@ const pg = require('pg');
 const faker = require('faker');
 
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/amazon';
-const client = new pg.Client(connectionString);
+const client = new pg.Client({
+  host: 'localhost',
+  database: 'amazon',
+  user: 'power_user',
+  password: '$poweruserpassword'
+});
 client.connect((err) => {
   if (err) {
     console.error('connection error', err.stack);
@@ -30,16 +35,16 @@ const writer = async (batch) => {
 
 const addIndex = async () => {  
   for (let j = 97; j < 123; j++) {
-    const keywordIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_keyword_index on ${String.fromCharCode(j)} (keyword)`;
+    const keywordIndex = `create index ${String.fromCharCode(j)}_keyword_index on ${String.fromCharCode(j)} (keyword)`;
     await client.query(keywordIndex);
-    const categoryIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_category_index on ${String.fromCharCode(j)} (category)`;
+    const categoryIndex = `create index ${String.fromCharCode(j)}_category_index on ${String.fromCharCode(j)} (category)`;
     await client.query(categoryIndex);
-    const popularityIndex = `create index IF NOT EXISTS ${String.fromCharCode(j)}_popularity_index on ${String.fromCharCode(j)} (popularity)`;
+    const popularityIndex = `create index ${String.fromCharCode(j)}_popularity_index on ${String.fromCharCode(j)} (popularity)`;
     await client.query(popularityIndex);
     console.log(j);
   }
   console.log('done');
-};``
+};
 
 const createBatch = async (batch) => {
   for (let i = 0; i < batch; i++) {
@@ -60,5 +65,6 @@ const setup = async () => {
   createBatch(10000);
 };
 
-setup();
+//setup();
+addIndex();
 
