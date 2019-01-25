@@ -1,5 +1,5 @@
 const redis = require('redis');
-const client = redis.createClient();
+const client = redis.createClient(6379,'13.57.202.125');
 
 client.on('connect', (err) => {
   if (err) {

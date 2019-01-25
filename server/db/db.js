@@ -3,7 +3,8 @@ const { Pool } = require('pg');
 const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/amazon';
 
 const pool = new Pool({
-  host: 'localhost',
+  host: '54.183.229.187',
+  port: 5432,
   database: 'amazon',
   user: 'power_user',
   password: '$poweruserpassword',

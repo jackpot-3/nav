@@ -12,7 +12,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use('/loaderio-fafc91dba272ef068e907c38c68b0af0', express.static(path.join(__dirname, '..', 'public/')));
 // MIDDLEWARE
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cors());
